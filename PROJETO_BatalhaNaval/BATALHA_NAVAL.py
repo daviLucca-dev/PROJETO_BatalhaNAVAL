@@ -5,29 +5,30 @@ pygame.init()
 pygame.display.set_caption("BATALHA NAVAL")
 
 #Caminho
-caminho = r"C:\Users\44840610827\Documents\DaviLucca\Lógica\PROJETO_BatalhaNaval"
+caminho = r"C:\Users\anaha\Documents\BatalhaNaval\PROJETO_BatalhaNAVAL\PROJETO_BatalhaNaval" #"C:\Users\44840610827\Documents\DaviLucca\Lógica\PROJETO_BatalhaNaval"
 
 #Som Background
 pygame.mixer.music.load(f"{caminho}\\Song_background.mp3")
 pygame.mixer.music.set_volume(0.3)
 pygame.mixer.music.play(-1)
 
-#Som barco
-
 
 qtd_coluna = 8
-qtd_linha = 5
+qtd_linha = 6
 
 OFFSET = 40
 
 # Tela
 largura = 80 * qtd_coluna + OFFSET + 20
-altura = 80 * qtd_linha + 120
-
-
-
+altura = 80 * qtd_linha + 150
 tela = pygame.display.set_mode((largura, altura))
 fonte = pygame.font.Font(f"{caminho}\\PressStart2P.ttf", 20)
+
+#tamanho do placar
+painel_x = 40
+painel_y = qtd_linha * 80 + 50
+painel_largura = largura - 80
+painel_altura = 90
 
 # Fundo
 fundo = pygame.image.load(f"{caminho}\\FUNDO_MAR.webp")
@@ -36,6 +37,12 @@ escurecimento = 80
 overlay = pygame.Surface((largura, altura))
 overlay.fill((0, 0, 0))
 overlay.set_alpha(escurecimento)
+
+# Personagens
+J1 = pygame.image.load(f"{caminho}\\J1.png")
+J2 = pygame.image.load(f"{caminho}\\J2.png")
+J1 = pygame.transform.scale(J1, (painel_altura - 5, painel_altura -5))
+J2 = pygame.transform.scale(J2, (painel_altura - 5, painel_altura - 5))
 
 # Imagens
 navio = pygame.image.load(f"{caminho}\\navio.png")
@@ -212,34 +219,44 @@ while True:
 
             pygame.draw.rect(tela, (50,50,50), (x,y,80,80), 1)
 
-    #tamanho do placar
-    painel_x = 40
-    painel_y = qtd_linha * 80 + 50
-    painel_largura = largura - 80
-    painel_altura = 60
 
+    #placar
     pygame.draw.rect(tela, (20,20,20), (painel_x, painel_y, painel_largura, painel_altura))
     pygame.draw.rect(tela, (200,200,200), (painel_x, painel_y, painel_largura, painel_altura), 2)
 
-    #placar
-    if estado == "jogo":
-        fonte_pla = pygame.font.Font(f"{caminho}\\PressStart2P.ttf", 15)
-        turno_txt = f"Turno: Jogador {jogador}"
-        info_txt = f"J1: {navios_rest1} navios  |  J2: {navios_rest2} navios"
 
-        tela.blit(fonte_pla.render(turno_txt, True, (255,255,0)), (painel_x + 20, painel_y + 10))
-        tela.blit(fonte_pla.render(info_txt, True, (255,255,255)), (painel_x + 20, painel_y + 35))
+    if estado == "jogo":
+        if jogador == 1:
+            nome_jogador = "Lyra"
+        elif jogador == 2:
+            nome_jogador = "Kael"
+
+
+        tela.blit(J1, (painel_x + 30, painel_y - 5))
+        texto_j1 = fonte.render(f"{navios_rest1}", True, (255,255,255))
+        tela.blit(texto_j1, (painel_x + 120, painel_y + 35))
+
+        tela.blit(J2, (painel_x + 500, painel_y - 5))
+        texto_j2 = fonte.render(f"{navios_rest2}", True, (255,255,255))
+        tela.blit(texto_j2, (painel_x + 480, painel_y + 35))
+
+        turno_txt = fonte.render(f"ATAQUE: {nome_jogador}", True, (255,255,0))
+        tela.blit(turno_txt, (painel_x + 190, painel_y + 35))
 
     else:
-        mensagens = {
-            "jogador1": "Jogador 1 - Posicione",
-            "mostrar1": "Memorize J1",
-            "jogador2": "Jogador 2 - Posicione",
-            "mostrar2": "Memorize J2"
-        }
+        if estado == "jogador1":
+            tela.blit(J1, (painel_x + 30, painel_y - 5))
+            jog1 = fonte.render("Jogador 1", True, (255,255,255))
+            tela.blit(jog1, (painel_x + 120, painel_y + 35))
 
-        msg = mensagens.get(estado, "")
-        tela.blit(fonte.render(msg, True, (255,255,255)), (painel_x + 20, painel_y + 15))
+        elif estado == "jogador2":
+            tela.blit(J2, (painel_x + 500, painel_y - 5))
+            jog2 = fonte.render("Jogador 2", True, (255,255,255))
+            tela.blit(jog2, (painel_x + 300, painel_y + 35))
+
+        elif estado in ["mostrar1", "mostrar2"]:
+            msg = fonte.render("Memorize", True, (255,255,255))
+            tela.blit(msg, (painel_x + painel_largura//2 - 80, painel_y + 35))
 
     #tempo de diferença
     if estado == "mostrar1" and pygame.time.get_ticks() - tempo_inicio > 2000:
@@ -254,7 +271,7 @@ while True:
         if (jogador == 1):
             jogador = 2
         else:
-            jogador = 1 
+            jogador = 1
 
     #vencedor
     if estado == "jogo":
