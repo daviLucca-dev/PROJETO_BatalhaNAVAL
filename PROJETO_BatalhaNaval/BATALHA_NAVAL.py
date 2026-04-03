@@ -5,7 +5,7 @@ pygame.init()
 pygame.display.set_caption("BATALHA NAVAL")
 
 #Caminho
-caminho = r"C:\Users\anaha\Documents\BatalhaNaval\PROJETO_BatalhaNAVAL\PROJETO_BatalhaNaval" #"C:\Users\44840610827\Documents\DaviLucca\Lógica\PROJETO_BatalhaNaval"
+caminho = r"C:\Users\anaha\Documents\PROJETO_BatalhaNAVAL\PROJETO_BatalhaNaval" #"C:\Users\44840610827\Documents\DaviLucca\Lógica\PROJETO_BatalhaNaval"
 
 #Som Background
 pygame.mixer.music.load(f"{caminho}\\Song_background.mp3")
